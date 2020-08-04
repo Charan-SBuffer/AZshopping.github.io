@@ -1,0 +1,140 @@
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd 
+http://www.springframework.org/schema/tx 
+http://www.springframework.org/schema/tx/spring-tx.xsd
+http://www.springframework.org/schema/security
+http://www.springframework.org/schema/security/spring-security.xsd
+">
+
+	<security:http>
+
+		<security:csrf disabled="true" />
+
+		<!-- with out authentication -->
+		<security:intercept-url pattern="/Home"
+			access="permitAll" />
+
+		<!-- to allow users / admin -->
+		<security:intercept-url pattern="/reqopensite"
+			access="hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')" />
+
+		<!-- to allow users -->
+		<security:intercept-url
+			pattern="/reqchangepassword" access="hasRole('ROLE_STUDENT')" />
+		<security:intercept-url
+			pattern="/reqcartdetail" access="hasRole('ROLE_STUDENT')" />
+		<security:intercept-url
+			pattern="/reqopenstudentpage" access="hasRole('ROLE_STUDENT')" />
+		<security:intercept-url
+			pattern="/reqcartdetail" access="hasRole('ROLE_STUDENT')" />
+		<security:intercept-url
+			pattern="/reqdeletfromcartitems" access="hasRole('ROLE_STUDENT')" />
+		<security:intercept-url
+			pattern="/reqdicreaseqnt" access="hasRole('ROLE_STUDENT')" />
+		<security:intercept-url
+			pattern="/reqincreaseqnt" access="hasRole('ROLE_STUDENT')" />
+		<security:intercept-url
+			pattern="/reqorderhistory" access="hasRole('ROLE_STUDENT')" />
+		<security:intercept-url
+			pattern="/reqorderdetails" access="hasRole('ROLE_STUDENT')" />
+		<security:intercept-url
+			pattern="/reqchngshipingadd" access="hasRole('ROLE_STUDENT')" />
+		<security:intercept-url
+			pattern="/reqchngbilingadd" access="hasRole('ROLE_STUDENT')" />
+
+
+
+
+		<!-- to allow admins -->
+		<security:intercept-url pattern="/reqproduct"
+			access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/reqshopper"
+			access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/reqxmap"
+			access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqopenadminpage" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/reqcategoury"
+			access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqaddcategoury" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqdeletcategoury" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqeditcategory" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/requpdatecategoury" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqchangecategoryavailable" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqchangeproductavailability"
+			access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/requpdateproduct" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqeditproduct" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqdeletproduct" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqaddproduct" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqaddshopper" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqdeletshopperdetails" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqeditshopperdetails" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/requpdateshopperdetails" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqchangeshopperexistemse" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/reqgetXmap"
+			access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/reqaddxmap"
+			access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/reqchangexmapexistens" access="hasRole('ROLE_ADMIN')" />
+
+
+		<!-- login config -->
+		<security:form-login
+			login-page="/reqSpringLoginPage"
+			authentication-failure-url="/reqSpringLoginPage?loginfail"
+			login-processing-url="/j_spring_security_check"
+			username-parameter="j_username" password-parameter="j_password"
+			default-target-url="/reqopensite" always-use-default-target="true" />
+
+		<security:logout
+			logout-url="/j_spring_security_logout"
+			logout-success-url="/reqLogout" />
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:jdbc-user-service
+				data-source-ref="dataSource"
+				users-by-username-query="select userid,password, enabled from userdetails where userid=?"
+				authorities-by-username-query="select userid, role from userdetails where userid=?" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="org.h2.Driver"></property>
+		<property name="url"
+			value="jdbc:h2:tcp://localhost/~/PRJCT-DT"></property>
+		<property name="username" value="fp"></property>
+		<property name="password" value=""></property>
+	</bean>
+
+</beans>

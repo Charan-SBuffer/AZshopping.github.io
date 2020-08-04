@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow 
+      http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd"
+      start-state="addCustomer">
+
+    <var name="customer" class="com.project.model.Customer" />
+<!--    	<var name="userdetails" class="com.project.model.UserDetails"/>
+   	<var name="shippingaddress" class="com.project.model.ShippingAddress"/>
+   --> 	  
+   	     	
+    <action-state id="addCustomer">          
+        <evaluate expression="customerDAO.getNewCustomer()" result="customer" />
+        <transition to="signuppage" />
+    </action-state>   
+    
+    
+    
+   <view-state id="signuppage" model="customer">
+        <transition on="addcucustomerInfoCollected" to="processsignup" />
+    </view-state>
+    
+    
+   	
+   <action-state id="processsignup">          
+        <evaluate expression="customerDAO.addcustomer1(customer)"  />
+        <transition to="thankCustomer" />
+    </action-state>
+    
+    <view-state id="thankCustomer" model="customer" view="thankCustomer.jsp">
+        <transition to="endState" />
+    </view-state>
+
+    <end-state id="endState" />    
+
+    <end-state id="cancelSingup" view="homepage.jsp" />
+
+    <global-transitions>
+        <transition on="cancel" to="cancelSingup" />
+    </global-transitions>
+
+</flow>
